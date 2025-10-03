@@ -252,12 +252,13 @@
             <div class="chat-header-info">
                 <div class="chat-avatar">
                     <?php 
-                    $avatar = $configuraciones['chatbot_avatar'] ?? 'chatbot-avatar.png';
+                    $avatar = $configuraciones['chatbot_avatar'] ?? '';
                     $avatarPath = BASE_URL . 'public/img/' . $avatar;
-                    // Check if avatar file is specified and not empty
-                    if (!empty($avatar) && $avatar !== 'chatbot-avatar.png' && file_exists($_SERVER['DOCUMENT_ROOT'] . '/public/img/' . $avatar)):
+                    // Display image if avatar is configured, otherwise show robot icon
+                    if (!empty($avatar) && $avatar !== 'chatbot-avatar.png'):
                     ?>
-                        <img src="<?php echo $avatarPath; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        <img src="<?php echo $avatarPath; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                        <i class="bi bi-robot" style="display: none;"></i>
                     <?php else: ?>
                         <i class="bi bi-robot"></i>
                     <?php endif; ?>
