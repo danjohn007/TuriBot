@@ -253,14 +253,14 @@
                 <div class="chat-avatar">
                     <?php 
                     $avatar = $configuraciones['chatbot_avatar'] ?? '';
-                    $avatarPath = BASE_URL . 'public/img/' . $avatar;
-                    // Display image if avatar is configured, otherwise show robot icon
-                    if (!empty($avatar) && $avatar !== 'chatbot-avatar.png'):
+                    // Display image if avatar is configured and not the default placeholder
+                    if (!empty($avatar) && $avatar !== 'chatbot-avatar.png' && $avatar !== 'robot.png'):
+                        $avatarPath = BASE_URL . 'public/img/' . $avatar;
                     ?>
                         <img src="<?php echo $avatarPath; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                        <i class="bi bi-robot" style="display: none;"></i>
+                        <i class="bi bi-robot" style="display: none; color: var(--primary-color);"></i>
                     <?php else: ?>
-                        <i class="bi bi-robot"></i>
+                        <i class="bi bi-robot" style="color: var(--primary-color);"></i>
                     <?php endif; ?>
                 </div>
                 <div class="chat-name">
@@ -321,6 +321,15 @@
         const chatMessages = document.getElementById('chatMessages');
         const typingIndicator = document.getElementById('typingIndicator');
         
+        // Variables para controlar la solicitud de contacto
+        window.contactoSolicitado = false;
+        window.lastInteractionTime = Date.now();
+        
+        // Actualizar tiempo de última interacción al escribir o enviar
+        messageInput.addEventListener('input', function() {
+            window.lastInteractionTime = Date.now();
+        });
+        
         // Enviar con Enter
         messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -333,6 +342,9 @@
             const mensaje = messageInput.value.trim();
             
             if (!mensaje) return;
+            
+            // Actualizar tiempo de última interacción
+            window.lastInteractionTime = Date.now();
             
             // Agregar mensaje del usuario
             addMessage(mensaje, 'user');
@@ -369,17 +381,8 @@
                 setTimeout(() => {
                     hideTypingIndicator();
                     
-                    // Procesar enlaces de los resultados
-                    let todosLosEnlaces = [];
-                    if (data.resultados && data.resultados.length > 0) {
-                        data.resultados.forEach(resultado => {
-                            if (resultado.enlaces && resultado.enlaces.length > 0) {
-                                todosLosEnlaces = todosLosEnlaces.concat(resultado.enlaces);
-                            }
-                        });
-                    }
-                    
-                    addMessage(data.respuesta, 'bot', data.sugerencias, todosLosEnlaces, data.solicitar_contacto);
+                    // Pasar los resultados con enlaces para mostrarlos después de cada ítem
+                    addMessage(data.respuesta, 'bot', data.sugerencias, data.resultados || [], data.solicitar_contacto);
                 }, delay);
                 
             } catch (error) {
@@ -390,7 +393,7 @@
         }
         
         // Función para agregar mensaje al chat
-        function addMessage(text, sender, suggestions = [], enlaces = [], solicitarContacto = false) {
+        function addMessage(text, sender, suggestions = [], resultados = [], solicitarContacto = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
             
@@ -403,20 +406,53 @@
                 suggestionsHtml += '</div>';
             }
             
-            // Agregar enlaces si existen
-            let enlacesHtml = '';
-            if (enlaces && enlaces.length > 0) {
-                enlacesHtml = '<div class="enlaces-container" style="margin-top: 10px;">';
-                enlaces.forEach(enlace => {
-                    enlacesHtml += `<a href="${enlace.url}" target="_blank" class="enlace-btn" style="display: inline-block; margin: 5px 5px 0 0; padding: 5px 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; text-decoration: none; border-radius: 15px; font-size: 0.85rem;"><i class="bi ${enlace.icono}"></i> ${enlace.texto}</a>`;
-                });
-                enlacesHtml += '</div>';
+            // Construir el mensaje con enlaces integrados después de cada ítem
+            let mensajeConEnlaces = text;
+            if (resultados && resultados.length > 0) {
+                // Separar el texto en líneas
+                let lineas = text.split('\n');
+                let nuevasLineas = [];
+                let resultadoIndex = 0;
+                
+                for (let i = 0; i < lineas.length; i++) {
+                    nuevasLineas.push(lineas[i]);
+                    
+                    // Detectar si la línea contiene el nombre de un resultado (empieza con emoji de categoría)
+                    if (resultadoIndex < resultados.length && 
+                        (lineas[i].includes('🏨') || lineas[i].includes('🍽️') || lineas[i].includes('🎯') || lineas[i].includes('🎉'))) {
+                        
+                        const resultado = resultados[resultadoIndex];
+                        
+                        // Buscar el final del bloque del ítem (siguiente línea vacía o siguiente ítem)
+                        let j = i + 1;
+                        while (j < lineas.length && lineas[j].trim() !== '' && 
+                               !lineas[j].includes('🏨') && !lineas[j].includes('🍽️') && 
+                               !lineas[j].includes('🎯') && !lineas[j].includes('🎉')) {
+                            nuevasLineas.push(lineas[j]);
+                            j++;
+                        }
+                        i = j - 1;
+                        
+                        // Agregar enlaces después de este ítem
+                        if (resultado.enlaces && resultado.enlaces.length > 0) {
+                            let enlacesHtml = '<div class="enlaces-item" style="margin: 5px 0 5px 20px;">';
+                            resultado.enlaces.forEach(enlace => {
+                                enlacesHtml += `<a href="${enlace.url}" target="_blank" class="enlace-btn" style="display: inline-block; margin: 3px 5px 3px 0; padding: 4px 10px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; text-decoration: none; border-radius: 12px; font-size: 0.8rem;"><i class="bi ${enlace.icono}"></i> ${enlace.texto}</a>`;
+                            });
+                            enlacesHtml += '</div>';
+                            nuevasLineas.push(enlacesHtml);
+                        }
+                        
+                        resultadoIndex++;
+                    }
+                }
+                
+                mensajeConEnlaces = nuevasLineas.join('\n');
             }
             
             messageDiv.innerHTML = `
                 <div class="message-content">
-                    ${text.replace(/\n/g, '<br>')}
-                    ${enlacesHtml}
+                    ${mensajeConEnlaces.replace(/\n/g, '<br>')}
                     ${suggestionsHtml}
                 </div>
             `;
@@ -424,11 +460,16 @@
             chatMessages.insertBefore(messageDiv, typingIndicator);
             scrollToBottom();
             
-            // Si se debe solicitar contacto, hacerlo después de 5 segundos
-            if (solicitarContacto) {
+            // Si se debe solicitar contacto, hacerlo después de 15 segundos y solo una vez
+            if (solicitarContacto && !window.contactoSolicitado) {
+                window.lastInteractionTime = Date.now();
                 setTimeout(() => {
-                    solicitarDatosContacto();
-                }, 5000);
+                    // Verificar que han pasado 15 segundos desde la última interacción
+                    if (!window.contactoSolicitado && (Date.now() - window.lastInteractionTime >= 15000)) {
+                        window.contactoSolicitado = true;
+                        solicitarDatosContacto();
+                    }
+                }, 15000);
             }
         }
         

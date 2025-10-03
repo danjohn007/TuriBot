@@ -42,7 +42,7 @@ INSERT IGNORE INTO configuracion (clave, valor, descripcion) VALUES
 
 -- Respuestas Rápidas y Sugerencias
 INSERT IGNORE INTO configuracion (clave, valor, descripcion) VALUES
-('chatbot_sugerencias_iniciales', '¿Qué lugares puedo visitar?|¿Dónde puedo hospedarme?|¿Qué eventos hay próximamente?|Contactos de emergencia', 'Sugerencias de preguntas que se muestran al inicio (separadas por |)'),
+('chatbot_sugerencias_iniciales', '¿Qué lugares puedo visitar?|¿Dónde puedo hospedarme?|Lugares recomendados para comer|¿Qué eventos hay próximamente?|Contactos de emergencia', 'Sugerencias de preguntas que se muestran al inicio (separadas por |)'),
 ('chatbot_respuesta_saludos', '¡Hola! Soy TuriBot, tu guía turístico virtual. ¿En qué puedo ayudarte hoy?', 'Respuesta automática a saludos del usuario'),
 ('chatbot_respuesta_agradecimiento', '¡De nada! Es un placer ayudarte. ¿Hay algo más en lo que pueda asistirte?', 'Respuesta automática cuando el usuario agradece');
 
