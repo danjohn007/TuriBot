@@ -16,8 +16,8 @@ define('BASE_URL', getBaseUrl() . '/');
 
 // Configuración de Base de Datos
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'fix360_recaudabot');
-define('DB_USER', 'fix360_recaudabot');
+define('DB_NAME', 'fix360_turibot');
+define('DB_USER', 'fix360_turibot');
 define('DB_PASS', 'Danjohn007!');
 define('DB_CHARSET', 'utf8mb4');
 
