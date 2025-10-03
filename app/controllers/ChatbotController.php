@@ -190,8 +190,11 @@ class ChatbotController extends BaseController {
         if (($config['chatbot_buscar_hospedajes'] ?? '1') == '1' && 
             (strpos($mensajeLower, 'hotel') !== false || 
              strpos($mensajeLower, 'hospedaje') !== false || 
-             strpos($mensajeLower, 'donde hospedar') !== false ||
-             strpos($mensajeLower, 'donde quedar') !== false)) {
+             strpos($mensajeLower, 'hospedarm') !== false ||
+             strpos($mensajeLower, 'hospedar') !== false || 
+             strpos($mensajeLower, 'donde quedar') !== false ||
+             strpos($mensajeLower, 'alojamiento') !== false ||
+             strpos($mensajeLower, 'dormir') !== false)) {
             return $this->searchHospedajes($mensaje, $config);
         }
         
@@ -199,7 +202,10 @@ class ChatbotController extends BaseController {
         if (($config['chatbot_buscar_restaurantes'] ?? '1') == '1' && 
             (strpos($mensajeLower, 'restaurant') !== false || 
              strpos($mensajeLower, 'comer') !== false || 
-             strpos($mensajeLower, 'comida') !== false)) {
+             strpos($mensajeLower, 'comida') !== false ||
+             strpos($mensajeLower, 'donde comer') !== false ||
+             strpos($mensajeLower, 'almorzar') !== false ||
+             strpos($mensajeLower, 'cenar') !== false)) {
             return $this->searchRestaurantes($mensaje, $config);
         }
         
@@ -397,7 +403,8 @@ class ChatbotController extends BaseController {
         
         $respuesta = "🚨 Contactos de Emergencia:\n\n";
         foreach ($emergencias as $emergencia) {
-            $respuesta .= "📞 " . $emergencia['nombre'] . ": " . $emergencia['telefono'] . "\n";
+            $numero = $emergencia['numero'] ?? $emergencia['telefono'] ?? '';
+            $respuesta .= "📞 " . $emergencia['nombre'] . ": " . $numero . "\n";
             if (!empty($emergencia['descripcion'])) {
                 $respuesta .= "   ℹ️ " . $emergencia['descripcion'] . "\n";
             }
