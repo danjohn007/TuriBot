@@ -26,11 +26,6 @@ define('APP_NAME', 'TuriBot Admin');
 define('APP_VERSION', '1.0.0');
 define('SITE_LOGO', BASE_URL . 'public/img/logo.png');
 
-// Configuración de sesiones
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-session_name('TURIBOT_SESSION');
-
 // Zona horaria
 date_default_timezone_set('America/Mexico_City');
 

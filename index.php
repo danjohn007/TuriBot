@@ -4,6 +4,11 @@
  * Punto de entrada principal de la aplicación
  */
 
+// Configuración de sesiones (debe hacerse ANTES de session_start)
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+session_name('TURIBOT_SESSION');
+
 // Iniciar sesión
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
