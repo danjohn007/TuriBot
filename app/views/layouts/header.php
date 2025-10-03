@@ -179,9 +179,21 @@
                                 <i class="bi bi-gear"></i> Configuración
                             </a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo BASE_URL; ?>configuracion/general">
+                                <i class="bi bi-sliders"></i> Configuraciones generales
+                            </a>
+                        </li>
                         <?php endif; ?>
                         
                         <li class="nav-item mt-3">
+                            <a class="nav-link" href="<?php echo BASE_URL; ?>perfil">
+                                <i class="bi bi-person-circle"></i> Mi perfil
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
                             <a class="nav-link" href="<?php echo BASE_URL; ?>auth/logout">
                                 <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                             </a>

@@ -39,5 +39,11 @@ class ConfiguracionController extends BaseController {
         
         redirect('configuracion');
     }
+    
+    public function general() {
+        $this->requireRole('admin');
+        $configuraciones = $this->configuracionModel->getAllAsArray();
+        $this->view('configuracion/general', ['configuraciones' => $configuraciones]);
+    }
 }
 ?>

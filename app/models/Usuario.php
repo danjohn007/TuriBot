@@ -138,5 +138,35 @@ class Usuario extends BaseModel {
         $stmt->execute([$rol]);
         return $stmt->fetchAll();
     }
+    
+    /**
+     * Actualiza perfil de usuario (sin cambiar rol ni estado activo)
+     */
+    public function updateProfile($id, $data) {
+        if (isset($data['password']) && !empty($data['password'])) {
+            $stmt = $this->db->prepare("
+                UPDATE {$this->table} 
+                SET nombre = ?, email = ?, password = ?
+                WHERE id = ?
+            ");
+            return $stmt->execute([
+                $data['nombre'],
+                $data['email'],
+                password_hash($data['password'], PASSWORD_DEFAULT),
+                $id
+            ]);
+        } else {
+            $stmt = $this->db->prepare("
+                UPDATE {$this->table} 
+                SET nombre = ?, email = ?
+                WHERE id = ?
+            ");
+            return $stmt->execute([
+                $data['nombre'],
+                $data['email'],
+                $id
+            ]);
+        }
+    }
 }
 ?>
