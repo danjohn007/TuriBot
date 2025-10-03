@@ -251,7 +251,16 @@
         <div class="chat-header">
             <div class="chat-header-info">
                 <div class="chat-avatar">
-                    <i class="bi bi-robot"></i>
+                    <?php 
+                    $avatar = $configuraciones['chatbot_avatar'] ?? 'chatbot-avatar.png';
+                    $avatarPath = BASE_URL . 'public/img/' . $avatar;
+                    // Check if avatar file is specified and not empty
+                    if (!empty($avatar) && $avatar !== 'chatbot-avatar.png' && file_exists($_SERVER['DOCUMENT_ROOT'] . '/public/img/' . $avatar)):
+                    ?>
+                        <img src="<?php echo $avatarPath; ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <i class="bi bi-robot"></i>
+                    <?php endif; ?>
                 </div>
                 <div class="chat-name">
                     <h4><?php echo htmlspecialchars($configuraciones['chatbot_nombre'] ?? 'TuriBot'); ?></h4>
@@ -358,7 +367,18 @@
                 
                 setTimeout(() => {
                     hideTypingIndicator();
-                    addMessage(data.respuesta, 'bot', data.sugerencias);
+                    
+                    // Procesar enlaces de los resultados
+                    let todosLosEnlaces = [];
+                    if (data.resultados && data.resultados.length > 0) {
+                        data.resultados.forEach(resultado => {
+                            if (resultado.enlaces && resultado.enlaces.length > 0) {
+                                todosLosEnlaces = todosLosEnlaces.concat(resultado.enlaces);
+                            }
+                        });
+                    }
+                    
+                    addMessage(data.respuesta, 'bot', data.sugerencias, todosLosEnlaces, data.solicitar_contacto);
                 }, delay);
                 
             } catch (error) {
@@ -369,7 +389,7 @@
         }
         
         // Función para agregar mensaje al chat
-        function addMessage(text, sender, suggestions = []) {
+        function addMessage(text, sender, suggestions = [], enlaces = [], solicitarContacto = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
             
@@ -382,15 +402,33 @@
                 suggestionsHtml += '</div>';
             }
             
+            // Agregar enlaces si existen
+            let enlacesHtml = '';
+            if (enlaces && enlaces.length > 0) {
+                enlacesHtml = '<div class="enlaces-container" style="margin-top: 10px;">';
+                enlaces.forEach(enlace => {
+                    enlacesHtml += `<a href="${enlace.url}" target="_blank" class="enlace-btn" style="display: inline-block; margin: 5px 5px 0 0; padding: 5px 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; text-decoration: none; border-radius: 15px; font-size: 0.85rem;"><i class="bi ${enlace.icono}"></i> ${enlace.texto}</a>`;
+                });
+                enlacesHtml += '</div>';
+            }
+            
             messageDiv.innerHTML = `
                 <div class="message-content">
                     ${text.replace(/\n/g, '<br>')}
+                    ${enlacesHtml}
                     ${suggestionsHtml}
                 </div>
             `;
             
             chatMessages.insertBefore(messageDiv, typingIndicator);
             scrollToBottom();
+            
+            // Si se debe solicitar contacto, hacerlo después de 5 segundos
+            if (solicitarContacto) {
+                setTimeout(() => {
+                    solicitarDatosContacto();
+                }, 5000);
+            }
         }
         
         // Función para enviar sugerencia
@@ -413,6 +451,66 @@
         // Scroll al final del chat
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Función para solicitar datos de contacto
+        function solicitarDatosContacto() {
+            const formHtml = `
+                <div style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                    <p style="margin-bottom: 10px; font-weight: 600;">¿Te gustaría recibir un resumen de esta información?</p>
+                    <div style="margin-bottom: 8px;">
+                        <input type="text" id="contacto_nombre" placeholder="Tu nombre" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 8px;">
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="tel" id="contacto_telefono" placeholder="Tu teléfono" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 8px;">
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="email" id="contacto_email" placeholder="Tu email" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 8px;">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="enviarDatosContacto()" style="flex: 1; padding: 8px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; border: none; border-radius: 5px; cursor: pointer;">Enviar</button>
+                        <button onclick="cancelarContacto()" style="padding: 8px 15px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">No, gracias</button>
+                    </div>
+                </div>
+            `;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.id = 'contacto-form-message';
+            messageDiv.innerHTML = `<div class="message-content">${formHtml}</div>`;
+            
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+        
+        // Función para enviar datos de contacto
+        function enviarDatosContacto() {
+            const nombre = document.getElementById('contacto_nombre').value.trim();
+            const telefono = document.getElementById('contacto_telefono').value.trim();
+            const email = document.getElementById('contacto_email').value.trim();
+            
+            if (!nombre || !telefono || !email) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+            
+            // Aquí podrías enviar los datos al servidor
+            // Por ahora solo mostramos un mensaje de confirmación
+            const formMessage = document.getElementById('contacto-form-message');
+            if (formMessage) {
+                formMessage.remove();
+            }
+            
+            addMessage('¡Gracias! Te enviaremos la información a tu correo.', 'bot');
+        }
+        
+        // Función para cancelar solicitud de contacto
+        function cancelarContacto() {
+            const formMessage = document.getElementById('contacto-form-message');
+            if (formMessage) {
+                formMessage.remove();
+            }
+            addMessage('¡De acuerdo! Si cambias de opinión, solo pregúntame.', 'bot');
         }
         
         // Scroll inicial
