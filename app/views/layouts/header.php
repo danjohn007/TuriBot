@@ -175,14 +175,8 @@
                         </li>
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo BASE_URL; ?>configuracion">
-                                <i class="bi bi-gear"></i> Configuración
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item">
                             <a class="nav-link" href="<?php echo BASE_URL; ?>configuracion/general">
-                                <i class="bi bi-sliders"></i> Configuraciones generales
+                                <i class="bi bi-sliders"></i> Configuraciones Generales
                             </a>
                         </li>
                         <?php endif; ?>

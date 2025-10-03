@@ -76,6 +76,81 @@
             
             <hr class="my-4">
             
+            <h5 class="mb-3"><i class="bi bi-envelope"></i> Configuración de Email</h5>
+            
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="bi bi-gear"></i> Servidor SMTP</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_host" class="form-label">Host SMTP</label>
+                            <input type="text" class="form-control" id="smtp_host" name="smtp_host" 
+                                   value="<?php echo htmlspecialchars($configuraciones['smtp_host'] ?? ''); ?>"
+                                   placeholder="smtp.gmail.com">
+                            <small class="text-muted">Servidor SMTP para envío de emails</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_port" class="form-label">Puerto SMTP</label>
+                            <input type="number" class="form-control" id="smtp_port" name="smtp_port" 
+                                   value="<?php echo htmlspecialchars($configuraciones['smtp_port'] ?? '587'); ?>"
+                                   placeholder="587">
+                            <small class="text-muted">Puerto del servidor SMTP (587 o 465)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_usuario" class="form-label">Usuario SMTP</label>
+                            <input type="text" class="form-control" id="smtp_usuario" name="smtp_usuario" 
+                                   value="<?php echo htmlspecialchars($configuraciones['smtp_usuario'] ?? ''); ?>"
+                                   placeholder="usuario@ejemplo.com">
+                            <small class="text-muted">Usuario para autenticación SMTP</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_password" class="form-label">Contraseña SMTP</label>
+                            <input type="password" class="form-control" id="smtp_password" name="smtp_password" 
+                                   value="<?php echo htmlspecialchars($configuraciones['smtp_password'] ?? ''); ?>"
+                                   placeholder="••••••••">
+                            <small class="text-muted">Contraseña del usuario SMTP</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email_remitente" class="form-label">Email Remitente</label>
+                            <input type="email" class="form-control" id="email_remitente" name="email_remitente" 
+                                   value="<?php echo htmlspecialchars($configuraciones['email_remitente'] ?? ''); ?>"
+                                   placeholder="noreply@turibot.com">
+                            <small class="text-muted">Email que aparecerá como remitente</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre_remitente" class="form-label">Nombre Remitente</label>
+                            <input type="text" class="form-control" id="nombre_remitente" name="nombre_remitente" 
+                                   value="<?php echo htmlspecialchars($configuraciones['nombre_remitente'] ?? 'TuriBot'); ?>"
+                                   placeholder="TuriBot">
+                            <small class="text-muted">Nombre que aparecerá como remitente</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="smtp_encriptacion" class="form-label">Tipo de Encriptación</label>
+                        <select class="form-control" id="smtp_encriptacion" name="smtp_encriptacion">
+                            <option value="tls" <?php echo ($configuraciones['smtp_encriptacion'] ?? 'tls') == 'tls' ? 'selected' : ''; ?>>TLS</option>
+                            <option value="ssl" <?php echo ($configuraciones['smtp_encriptacion'] ?? 'tls') == 'ssl' ? 'selected' : ''; ?>>SSL</option>
+                        </select>
+                        <small class="text-muted">Protocolo de seguridad para la conexión</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> <strong>Nota:</strong> Estos datos son necesarios para el envío de emails de recuperación de contraseña y notificaciones del sistema.
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
             <h5 class="mb-3"><i class="bi bi-robot"></i> Configuración del ChatBot</h5>
             
             <!-- Configuración Básica -->

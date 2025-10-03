@@ -20,7 +20,7 @@ class ConfiguracionController extends BaseController {
         $this->requireRole('admin');
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            redirect('configuracion');
+            redirect('configuracion/general');
         }
         
         try {
@@ -58,10 +58,10 @@ class ConfiguracionController extends BaseController {
             logActivity('Actualizó configuración general', 'configuracion');
             setFlash('success', 'Configuración actualizada exitosamente');
         } catch (Exception $e) {
-            setFlash('danger', 'Error al actualizar la configuración');
+            setFlash('danger', 'Error al actualizar la configuración: ' . $e->getMessage());
         }
         
-        redirect('configuracion');
+        redirect('configuracion/general');
     }
     
     public function general() {

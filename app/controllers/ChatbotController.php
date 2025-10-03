@@ -264,6 +264,7 @@ class ChatbotController extends BaseController {
         }
         
         $respuesta = ($config['chatbot_mensaje_lista_resultados'] ?? 'Encontré estas opciones:') . "\n\n";
+        $resultados = [];
         foreach (array_slice($hospedajes, 0, 5) as $hospedaje) {
             $respuesta .= "🏨 " . $hospedaje['nombre'] . "\n";
             if (!empty($hospedaje['direccion'])) {
@@ -272,13 +273,37 @@ class ChatbotController extends BaseController {
             if (!empty($hospedaje['telefono'])) {
                 $respuesta .= "   📞 " . $hospedaje['telefono'] . "\n";
             }
+            
+            // Preparar enlaces para el resultado
+            $enlaces = [];
+            if (!empty($hospedaje['sitio_web'])) {
+                $enlaces[] = [
+                    'texto' => 'Sitio Web',
+                    'url' => $hospedaje['sitio_web'],
+                    'icono' => 'bi-globe'
+                ];
+            }
+            if (!empty($hospedaje['enlace_reservacion'])) {
+                $enlaces[] = [
+                    'texto' => 'Reservar',
+                    'url' => $hospedaje['enlace_reservacion'],
+                    'icono' => 'bi-calendar-check'
+                ];
+            }
+            
+            $resultados[] = [
+                'nombre' => $hospedaje['nombre'],
+                'enlaces' => $enlaces
+            ];
+            
             $respuesta .= "\n";
         }
         
         return [
             'respuesta' => $respuesta,
             'tipo' => 'hospedajes',
-            'resultados' => array_slice($hospedajes, 0, 5)
+            'resultados' => $resultados,
+            'solicitar_contacto' => true
         ];
     }
     
@@ -297,6 +322,7 @@ class ChatbotController extends BaseController {
         }
         
         $respuesta = ($config['chatbot_mensaje_lista_resultados'] ?? 'Encontré estas opciones:') . "\n\n";
+        $resultados = [];
         foreach (array_slice($restaurantes, 0, 5) as $restaurante) {
             $respuesta .= "🍽️ " . $restaurante['nombre'] . "\n";
             if (!empty($restaurante['tipo_comida'])) {
@@ -308,13 +334,37 @@ class ChatbotController extends BaseController {
             if (!empty($restaurante['telefono'])) {
                 $respuesta .= "   📞 " . $restaurante['telefono'] . "\n";
             }
+            
+            // Preparar enlaces para el resultado
+            $enlaces = [];
+            if (!empty($restaurante['sitio_web'])) {
+                $enlaces[] = [
+                    'texto' => 'Sitio Web',
+                    'url' => $restaurante['sitio_web'],
+                    'icono' => 'bi-globe'
+                ];
+            }
+            if (!empty($restaurante['enlace_reservacion'])) {
+                $enlaces[] = [
+                    'texto' => 'Reservar',
+                    'url' => $restaurante['enlace_reservacion'],
+                    'icono' => 'bi-calendar-check'
+                ];
+            }
+            
+            $resultados[] = [
+                'nombre' => $restaurante['nombre'],
+                'enlaces' => $enlaces
+            ];
+            
             $respuesta .= "\n";
         }
         
         return [
             'respuesta' => $respuesta,
             'tipo' => 'restaurantes',
-            'resultados' => array_slice($restaurantes, 0, 5)
+            'resultados' => $resultados,
+            'solicitar_contacto' => true
         ];
     }
     
@@ -333,6 +383,7 @@ class ChatbotController extends BaseController {
         }
         
         $respuesta = ($config['chatbot_mensaje_lista_resultados'] ?? 'Encontré estas opciones:') . "\n\n";
+        $resultados = [];
         foreach (array_slice($atracciones, 0, 5) as $atraccion) {
             $respuesta .= "🎯 " . $atraccion['nombre'] . "\n";
             if (!empty($atraccion['categoria'])) {
@@ -344,13 +395,30 @@ class ChatbotController extends BaseController {
             if (!empty($atraccion['horario_apertura'])) {
                 $respuesta .= "   🕐 " . $atraccion['horario_apertura'] . " - " . $atraccion['horario_cierre'] . "\n";
             }
+            
+            // Preparar enlaces para el resultado
+            $enlaces = [];
+            if (!empty($atraccion['enlace_externo'])) {
+                $enlaces[] = [
+                    'texto' => 'Más información',
+                    'url' => $atraccion['enlace_externo'],
+                    'icono' => 'bi-info-circle'
+                ];
+            }
+            
+            $resultados[] = [
+                'nombre' => $atraccion['nombre'],
+                'enlaces' => $enlaces
+            ];
+            
             $respuesta .= "\n";
         }
         
         return [
             'respuesta' => $respuesta,
             'tipo' => 'atracciones',
-            'resultados' => array_slice($atracciones, 0, 5)
+            'resultados' => $resultados,
+            'solicitar_contacto' => true
         ];
     }
     
@@ -369,21 +437,39 @@ class ChatbotController extends BaseController {
         }
         
         $respuesta = ($config['chatbot_mensaje_lista_resultados'] ?? 'Encontré estas opciones:') . "\n\n";
+        $resultados = [];
         foreach (array_slice($eventos, 0, 5) as $evento) {
             $respuesta .= "🎉 " . $evento['nombre'] . "\n";
             if (!empty($evento['fecha_inicio'])) {
                 $respuesta .= "   📅 " . date('d/m/Y', strtotime($evento['fecha_inicio'])) . "\n";
             }
-            if (!empty($evento['lugar'])) {
-                $respuesta .= "   📍 " . $evento['lugar'] . "\n";
+            if (!empty($evento['ubicacion'])) {
+                $respuesta .= "   📍 " . $evento['ubicacion'] . "\n";
             }
+            
+            // Preparar enlaces para el resultado (los eventos pueden tener enlace de registro o información)
+            $enlaces = [];
+            if (!empty($evento['enlace_boletos'])) {
+                $enlaces[] = [
+                    'texto' => 'Comprar boletos',
+                    'url' => $evento['enlace_boletos'],
+                    'icono' => 'bi-ticket-perforated'
+                ];
+            }
+            
+            $resultados[] = [
+                'nombre' => $evento['nombre'],
+                'enlaces' => $enlaces
+            ];
+            
             $respuesta .= "\n";
         }
         
         return [
             'respuesta' => $respuesta,
             'tipo' => 'eventos',
-            'resultados' => array_slice($eventos, 0, 5)
+            'resultados' => $resultados,
+            'solicitar_contacto' => true
         ];
     }
     
