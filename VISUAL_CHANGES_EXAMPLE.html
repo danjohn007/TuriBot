@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuriBot - Visual Changes Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .comparison-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .comparison-section {
+            margin-bottom: 40px;
+        }
+        
+        .comparison-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .example-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .example-box h4 {
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+        
+        .example-box.after h4 {
+            color: #28a745;
+        }
+        
+        .badge-before {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .badge-after {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .message-example {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .suggestion-btn {
+            background: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 3px;
+            display: inline-block;
+        }
+        
+        .enlace-btn {
+            display: inline-block;
+            margin: 3px 5px 3px 0;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .item-block {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .contact-form {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .timeline-icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <h1 class="text-center mb-4" style="color: var(--primary-color);">
+            <i class="bi bi-robot"></i> TuriBot - Changes Overview
+        </h1>
+        <p class="text-center text-muted mb-5">Visual comparison of improvements made to the chatbot</p>
+        
+        <!-- Fix 1: Database Error -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-database-fill-exclamation"></i> 1. Database Duplicate Key Error Fix
+            </h2>
+            <div class="before-after">
+                <div class="example-box">
+                    <h4><span class="badge-before">BEFORE</span></h4>
+                    <div class="alert alert-danger">
+                        <i class="bi bi-x-circle-fill"></i> Error al actualizar la información:<br>
+                        <small>SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'nombre_sistema' for key 'clave'</small>
+                    </div>
+                    <p><strong>Problem:</strong> UPDATE then INSERT caused race conditions</p>
+                </div>
+                <div class="example-box after">
+                    <h4><span class="badge-after">AFTER</span></h4>
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill"></i> Configuración actualizada exitosamente
+                    </div>
+                    <p><strong>Solution:</strong> Atomic INSERT ... ON DUPLICATE KEY UPDATE</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fix 2: Suggestions -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-chat-dots-fill"></i> 2. Welcome Message Suggestions
+            </h2>
+            <div class="before-after">
+                <div class="example-box">
+                    <h4><span class="badge-before">BEFORE</span></h4>
+                    <div class="message-example">
+                        <p>¡Bienvenido! ¿En qué puedo ayudarte?</p>
+                        <div>
+                            <span class="suggestion-btn">¿Qué lugares puedo visitar?</span>
+                            <span class="suggestion-btn">¿Dónde puedo hospedarme?</span>
+                            <span class="suggestion-btn">¿Qué eventos hay próximamente?</span>
+                            <span class="suggestion-btn">Contactos de emergencia</span>
+                        </div>
+                    </div>
+                    <p><i class="bi bi-exclamation-triangle-fill text-warning"></i> Missing restaurant recommendation option</p>
+                </div>
+                <div class="example-box after">
+                    <h4><span class="badge-after">AFTER</span></h4>
+                    <div class="message-example">
+                        <p>¡Bienvenido! ¿En qué puedo ayudarte?</p>
+                        <div>
+                            <span class="suggestion-btn">¿Qué lugares puedo visitar?</span>
+                            <span class="suggestion-btn">¿Dónde puedo hospedarme?</span>
+                            <span class="suggestion-btn" style="background: #ffc107; border-color: #ffc107;">Lugares recomendados para comer</span>
+                            <span class="suggestion-btn">¿Qué eventos hay próximamente?</span>
+                            <span class="suggestion-btn">Contactos de emergencia</span>
+                        </div>
+                    </div>
+                    <p><i class="bi bi-check-circle-fill text-success"></i> Added restaurant recommendation option</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fix 3: Contact Form -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-envelope-fill"></i> 3. Contact Form Display
+            </h2>
+            <div class="before-after">
+                <div class="example-box">
+                    <h4><span class="badge-before">BEFORE</span></h4>
+                    <div class="timeline">
+                        <i class="bi bi-clock-fill timeline-icon"></i>
+                        <span>Shows after 5 seconds</span>
+                    </div>
+                    <div class="timeline">
+                        <i class="bi bi-arrow-repeat timeline-icon text-danger"></i>
+                        <span>Can show multiple times (annoying!)</span>
+                    </div>
+                    <div class="contact-form">
+                        <p><strong>¿Te gustaría recibir un resumen de esta información?</strong></p>
+                        <small class="text-muted">Appears too soon and repeatedly</small>
+                    </div>
+                </div>
+                <div class="example-box after">
+                    <h4><span class="badge-after">AFTER</span></h4>
+                    <div class="timeline">
+                        <i class="bi bi-clock-fill timeline-icon text-success"></i>
+                        <span>Shows after 15 seconds of inactivity</span>
+                    </div>
+                    <div class="timeline">
+                        <i class="bi bi-check-circle-fill timeline-icon text-success"></i>
+                        <span>Shows only once per session</span>
+                    </div>
+                    <div class="timeline">
+                        <i class="bi bi-arrow-clockwise timeline-icon text-info"></i>
+                        <span>Timer resets on user interaction</span>
+                    </div>
+                    <div class="contact-form">
+                        <p><strong>¿Te gustaría recibir un resumen de esta información?</strong></p>
+                        <small class="text-success">Appears at the right time, only once</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fix 4: Links Display -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-link-45deg"></i> 4. Links Display Position
+            </h2>
+            <div class="before-after">
+                <div class="example-box">
+                    <h4><span class="badge-before">BEFORE</span></h4>
+                    <div class="message-example">
+                        <p><strong>Encontré estas opciones:</strong></p>
+                        <div class="item-block">
+                            🏨 Hotel Paradise<br>
+                            📍 Calle Principal 123<br>
+                            📞 555-1234
+                        </div>
+                        <div class="item-block">
+                            🏨 Hotel Sunset<br>
+                            📍 Avenida Central 456<br>
+                            📞 555-5678
+                        </div>
+                        <div class="item-block">
+                            🏨 Hotel Marina<br>
+                            📍 Boulevard Costero 789<br>
+                            📞 555-9012
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                            <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                            <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                            <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                            <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                            <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                        </div>
+                        <p class="text-danger mt-2"><i class="bi bi-exclamation-triangle-fill"></i> Can't tell which link belongs to which hotel!</p>
+                    </div>
+                </div>
+                <div class="example-box after">
+                    <h4><span class="badge-after">AFTER</span></h4>
+                    <div class="message-example">
+                        <p><strong>Encontré estas opciones:</strong></p>
+                        <div class="item-block">
+                            🏨 Hotel Paradise<br>
+                            📍 Calle Principal 123<br>
+                            📞 555-1234<br>
+                            <div style="margin-top: 8px;">
+                                <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                                <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                            </div>
+                        </div>
+                        <div class="item-block">
+                            🏨 Hotel Sunset<br>
+                            📍 Avenida Central 456<br>
+                            📞 555-5678<br>
+                            <div style="margin-top: 8px;">
+                                <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                                <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                            </div>
+                        </div>
+                        <div class="item-block">
+                            🏨 Hotel Marina<br>
+                            📍 Boulevard Costero 789<br>
+                            📞 555-9012<br>
+                            <div style="margin-top: 8px;">
+                                <a href="#" class="enlace-btn"><i class="bi bi-globe"></i> Sitio Web</a>
+                                <a href="#" class="enlace-btn"><i class="bi bi-calendar-check"></i> Reservar</a>
+                            </div>
+                        </div>
+                        <p class="text-success mt-2"><i class="bi bi-check-circle-fill"></i> Links clearly associated with each item!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fix 5: Logo Display -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-image-fill"></i> 5. Logo Display in Chatbot
+            </h2>
+            <div class="before-after">
+                <div class="example-box">
+                    <h4><span class="badge-before">BEFORE</span></h4>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; border: 2px solid #e0e0e0;">
+                            <i class="bi bi-robot" style="font-size: 1.5rem; color: #999;"></i>
+                        </div>
+                        <div>
+                            <h5>TuriBot</h5>
+                            <small class="text-muted">En línea</small>
+                        </div>
+                    </div>
+                    <p class="mt-3"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Logo configured in admin doesn't show</p>
+                </div>
+                <div class="example-box after">
+                    <h4><span class="badge-after">AFTER</span></h4>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); display: flex; align-items: center; justify-content: center; color: white;">
+                            <strong>TB</strong>
+                        </div>
+                        <div>
+                            <h5>TuriBot</h5>
+                            <small class="text-muted">En línea</small>
+                        </div>
+                    </div>
+                    <p class="mt-3"><i class="bi bi-check-circle-fill text-success"></i> Custom logo displays correctly, with proper fallback</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div class="comparison-section">
+            <h2 class="comparison-title">
+                <i class="bi bi-clipboard-check-fill"></i> Summary of Improvements
+            </h2>
+            <div class="alert alert-success">
+                <h4><i class="bi bi-check2-all"></i> All Issues Resolved</h4>
+                <ul>
+                    <li>✅ Database duplicate key error fixed with atomic operation</li>
+                    <li>✅ "Lugares recomendados para comer" added to welcome suggestions</li>
+                    <li>✅ Contact form shows only once after 15 seconds of inactivity</li>
+                    <li>✅ Links displayed contextually below each item</li>
+                    <li>✅ Logo display improved with better fallback handling</li>
+                </ul>
+            </div>
+            
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle-fill"></i> Technical Improvements</h5>
+                <ul>
+                    <li>Thread-safe database operations</li>
+                    <li>Better user experience with intelligent timing</li>
+                    <li>Improved information architecture</li>
+                    <li>More robust error handling</li>
+                    <li>Backward compatible changes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

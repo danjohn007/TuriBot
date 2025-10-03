@@ -11,22 +11,13 @@ class Configuracion extends BaseModel {
     }
     
     public function update($clave, $valor) {
-        // Primero intentar actualizar
+        // Usar INSERT ... ON DUPLICATE KEY UPDATE para evitar errores de duplicados
         $stmt = $this->db->prepare("
-            UPDATE {$this->table} SET valor = ? WHERE clave = ?
+            INSERT INTO {$this->table} (clave, valor, descripcion) 
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE valor = VALUES(valor)
         ");
-        $stmt->execute([$valor, $clave]);
-        
-        // Si no se actualizó ninguna fila, insertar nueva configuración
-        if ($stmt->rowCount() == 0) {
-            $stmt = $this->db->prepare("
-                INSERT INTO {$this->table} (clave, valor, descripcion) 
-                VALUES (?, ?, ?)
-            ");
-            return $stmt->execute([$clave, $valor, 'Configuración agregada automáticamente']);
-        }
-        
-        return true;
+        return $stmt->execute([$clave, $valor, 'Configuración agregada automáticamente']);
     }
     
     public function getAllAsArray() {
