@@ -210,7 +210,7 @@ function formatCurrency($amount) {
  */
 function getImageUrl($filename, $folder) {
     if (empty($filename)) {
-        return BASE_URL . 'public/img/no-image.png';
+        return BASE_URL . 'public/img/no-image.svg';
     }
     return BASE_URL . 'public/uploads/' . $folder . '/' . $filename;
 }
