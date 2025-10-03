@@ -11,10 +11,22 @@ class Configuracion extends BaseModel {
     }
     
     public function update($clave, $valor) {
+        // Primero intentar actualizar
         $stmt = $this->db->prepare("
             UPDATE {$this->table} SET valor = ? WHERE clave = ?
         ");
-        return $stmt->execute([$valor, $clave]);
+        $stmt->execute([$valor, $clave]);
+        
+        // Si no se actualizó ninguna fila, insertar nueva configuración
+        if ($stmt->rowCount() == 0) {
+            $stmt = $this->db->prepare("
+                INSERT INTO {$this->table} (clave, valor, descripcion) 
+                VALUES (?, ?, ?)
+            ");
+            return $stmt->execute([$clave, $valor, 'Configuración agregada automáticamente']);
+        }
+        
+        return true;
     }
     
     public function getAllAsArray() {
