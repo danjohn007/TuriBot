@@ -49,6 +49,46 @@
         .btn-login:hover {
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
+        .chatbot-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .btn-chatbot {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-chatbot:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+            color: white;
+        }
+        .btn-chatbot i {
+            font-size: 1.5rem;
+        }
+        .chatbot-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+            }
+        }
     </style>
 </head>
 <body>
@@ -109,6 +149,14 @@
                 </div>
             </div>
         </div>
+    </div>
+    
+    <!-- Botón flotante para acceder al ChatBot -->
+    <div class="chatbot-link">
+        <a href="<?php echo BASE_URL; ?>chatbot" class="btn-chatbot chatbot-pulse">
+            <i class="bi bi-robot"></i>
+            <span>Prueba el ChatBot</span>
+        </a>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
