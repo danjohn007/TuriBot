@@ -46,14 +46,39 @@
             
             <h5 class="mb-3"><i class="bi bi-robot"></i> Configuración del ChatBot</h5>
             
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="chatbot_nombre" class="form-label">Nombre del ChatBot</label>
+                    <input type="text" class="form-control" id="chatbot_nombre" name="chatbot_nombre" 
+                           value="<?php echo htmlspecialchars($configuraciones['chatbot_nombre'] ?? 'TuriBot'); ?>">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="chatbot_activado" class="form-label">Estado</label>
+                    <select class="form-control" id="chatbot_activado" name="chatbot_activado">
+                        <option value="1" <?php echo ($configuraciones['chatbot_activado'] ?? '1') == '1' ? 'selected' : ''; ?>>Activado</option>
+                        <option value="0" <?php echo ($configuraciones['chatbot_activado'] ?? '1') == '0' ? 'selected' : ''; ?>>Desactivado</option>
+                    </select>
+                </div>
+            </div>
+            
             <div class="mb-3">
                 <label for="mensaje_bienvenida" class="form-label">Mensaje de Bienvenida</label>
-                <textarea class="form-control" id="mensaje_bienvenida" name="mensaje_bienvenida" rows="3"><?php echo htmlspecialchars($configuraciones['mensaje_bienvenida'] ?? ''); ?></textarea>
-                <small class="text-muted">Este mensaje se mostrará cuando un usuario inicie conversación con el ChatBot</small>
+                <textarea class="form-control" id="mensaje_bienvenida" name="mensaje_bienvenida" rows="2"><?php echo htmlspecialchars($configuraciones['mensaje_bienvenida'] ?? ''); ?></textarea>
+                <small class="text-muted">Primer mensaje que ve el usuario al abrir el chatbot</small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="chatbot_tono_conversacion" class="form-label">Tono de Conversación</label>
+                <select class="form-control" id="chatbot_tono_conversacion" name="chatbot_tono_conversacion">
+                    <option value="formal" <?php echo ($configuraciones['chatbot_tono_conversacion'] ?? 'amigable') == 'formal' ? 'selected' : ''; ?>>Formal</option>
+                    <option value="amigable" <?php echo ($configuraciones['chatbot_tono_conversacion'] ?? 'amigable') == 'amigable' ? 'selected' : ''; ?>>Amigable</option>
+                    <option value="casual" <?php echo ($configuraciones['chatbot_tono_conversacion'] ?? 'amigable') == 'casual' ? 'selected' : ''; ?>>Casual</option>
+                    <option value="profesional" <?php echo ($configuraciones['chatbot_tono_conversacion'] ?? 'amigable') == 'profesional' ? 'selected' : ''; ?>>Profesional</option>
+                </select>
             </div>
             
             <div class="alert alert-info">
-                <i class="bi bi-lightbulb"></i> <strong>Sugerencia:</strong> Los cambios en la configuración se aplicarán inmediatamente en el sistema administrativo y en el ChatBot.
+                <i class="bi bi-lightbulb"></i> <strong>Sugerencia:</strong> Los cambios en la configuración se aplicarán inmediatamente en el sistema administrativo y en el ChatBot. Para configuración avanzada, visita <a href="<?php echo BASE_URL; ?>configuracion/general">Configuraciones Generales</a>.
             </div>
             
             <button type="submit" class="btn btn-primary">

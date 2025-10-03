@@ -24,6 +24,30 @@ class ConfiguracionController extends BaseController {
         }
         
         try {
+            // Lista de campos de checkbox/switch para manejar valores no enviados
+            $checkboxFields = [
+                'chatbot_activado',
+                'chatbot_buscar_hospedajes',
+                'chatbot_buscar_restaurantes',
+                'chatbot_buscar_atracciones',
+                'chatbot_buscar_eventos',
+                'chatbot_emergencias',
+                'chatbot_recomendaciones',
+                'chatbot_mostrar_sugerencias',
+                'chatbot_mostrar_escribiendo',
+                'chatbot_atencion_247',
+                'chatbot_guardar_conversaciones',
+                'chatbot_solicitar_feedback',
+                'chatbot_aprendizaje_activo'
+            ];
+            
+            // Establecer valores 0 para checkboxes no marcados
+            foreach ($checkboxFields as $field) {
+                if (!isset($_POST[$field])) {
+                    $_POST[$field] = '0';
+                }
+            }
+            
             // Actualizar todas las configuraciones
             foreach ($_POST as $clave => $valor) {
                 if ($clave !== 'csrf_token') {
